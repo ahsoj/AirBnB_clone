@@ -5,16 +5,25 @@ import json
 
 
 class FileStorage:
+    """
+        private_instance attribute \
+        for serialize and deserialize \
+        data
+    """
+
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
+        """return all nistances and objects"""
         return self.__objects
 
     def new(self, obj):
+        """create new instance"""
         self.__objects["{}.{}".format(obj.__class__.__name__, obj.id)] = obj
 
     def save(self):
+        """serialize data from dict object """
         with open(self.__file_path, 'w') as fp:
             dict_map = {}
             for k,v in self.__objects.items():
@@ -23,7 +32,11 @@ class FileStorage:
             json.dump(dict_map, fp)
 
     def reload(self):
-        if self.__file_path:
+        """deserialize data from file"""
+        try:
             with open(self.__file_path, 'r') as fp:
-                json.load(fp)
+                for obj in json.load(fp).values():
+                    self.new(eval(obj["__class__"])(**obj))
+        except FileNotFoundError:
+            return
 
