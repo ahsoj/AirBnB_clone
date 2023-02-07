@@ -9,17 +9,21 @@ class FileStorage:
     __objects = {}
 
     def all(self):
-        return dict(FileStorage.__objects)
+        return self.__objects
 
     def new(self, obj):
-        FileStorage.__objects['id'] = obj
+        self.__objects["{}.{}".format(obj.__class__.__name__, obj.id)] = obj
 
     def save(self):
-        if __file_path:
-            with open(FileStorage.__file_path, 'w') as fp:
-                json.dump(FileStorage.__objects, fp)
+        with open(self.__file_path, 'w') as fp:
+            dict_map = {}
+            for k,v in self.__objects.items():
+                dict_map[k] = v.to_dict()
+
+            json.dump(dict_map, fp)
 
     def reload(self):
-         with open(FileStorage.__file_path, 'r') as fp:
-            json.load(fp)
+        if self.__file_path:
+            with open(self.__file_path, 'r') as fp:
+                json.load(fp)
 
