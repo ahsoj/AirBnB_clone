@@ -10,33 +10,35 @@ class FileStorage:
         for serialize and deserialize \
         data
     """
-
-    __file_path = "file.json"
+    __file_path = "model.json"
     __objects = {}
 
     def all(self):
-        """return all nistances and objects"""
         return self.__objects
 
-    def new(self, obj):
-        """create new instance"""
-        self.__objects["{}.{}".format(obj.__class__.__name__, obj.id)] = obj
+    def new(self, obj: dict):
+        """ create new intance of object """
+        key = "{}.{}".format(obj.__class__.__name__, obj.id)
+        value = obj
+        FileStorage.__objects[key] = value # .update({key: value})
 
     def save(self):
-        """serialize data from dict object """
-        with open(self.__file_path, 'w') as fp:
-            dict_map = {}
-            for k,v in self.__objects.items():
-                dict_map[k] = v.to_dict()
-
-            json.dump(dict_map, fp)
+        """ save a current or new object of model """
+        with open(FileStorage.__file_path, 'w') as fp:
+            dict_obj = {}
+            for k,v in FileStorage.__objects.items():
+                dict_obj[k] = v.to_dict()
+            json.dump(dict_obj, fp)
 
     def reload(self):
-        """deserialize data from file"""
+        """ reload file when it call for new """
         try:
-            with open(self.__file_path, 'r') as fp:
-                for obj in json.load(fp).values():
-                    self.new(eval(obj["__class__"])(**obj))
+            with open(FileStorage.__file_path, encoding="utf-8") as fp:
+                FileStorage.__objects = json.load(fp)
+            for k,v in FileStorage.__objects.items():
+                FileStorage.__objects[k] = v
+                #FileStorage.__objects[k] = cls_(**v)
+                #print(FileStorage.__objects)
         except FileNotFoundError:
             return
 

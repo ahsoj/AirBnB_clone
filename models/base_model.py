@@ -1,13 +1,14 @@
 #!/usr/bin/python3
-"""class BaseModel that defines all common \
-        attributes/methods for other classes"""
+"""Create BaseModel for Defining \
+        id: str/uuid \
+        created_at: datetime \
+        updated_at: datetime \
+"""
 import uuid
-import datetime
-from models import storage
+from datetime import datetime
 
 
 class BaseModel:
-    """Initialize class of instances"""
 
     def __init__(self, *args, **kwargs):
         """
@@ -16,17 +17,18 @@ class BaseModel:
             if kwargs avail set attribute with setattr \
              methods else return current instance
         """
+        from inits import storage
         if kwargs:
-            for k, v in kwargs.items():
-                if k != "__class__":
-                    if k in ["created_at", "updated_at"]:
-                        setattr(self, k, datetime.datetime.fromisoformat(v))
+            for k,v in kwargs.items():
+                if k != '__class__':
+                    if k in ['created_at', 'updated_at']:
+                        setattr(self, k, datetime.fromisoformat(v))
                     else:
                         setattr(self, k, v)
         else:
             self.id = str(uuid.uuid4())
-            self.create_at = datetime.datetime.now()
-            self.updated_at = datetime.datetime.now()
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
             storage.new(self)
 
     def save(self):
@@ -34,7 +36,9 @@ class BaseModel:
             updates the public instance attribute \
             updated_at with the current datetime
         """
-        self.updated_at = datetime.datetime.now()
+
+        from inits import storage
+        self.updated_at = datetime.now()
         storage.save()
 
     def to_dict(self):
@@ -42,14 +46,14 @@ class BaseModel:
             returns a dictionary containing all \
             keys/values of __dict__ of the instance:
         """
-        my_dict = {}
+
+        my_dict = self.__dict__.copy()
         my_dict["__class__"] = self.__class__.__name__
-        for key, value in self.__dict__.items():
-            if key in ["created_at", "upadted_at"]:
+        for key,value in self.__dict__.items():
+            if key in ["created_at", "updated_at"]:
                 value = self.__dict__[key].isoformat()
                 my_dict[key] = value
             my_dict[key] = value
-        # my_dict["__class__"] = self.__class__.__name__
         return my_dict
 
     def __str__(self):
