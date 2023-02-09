@@ -98,7 +98,7 @@ class HBNBCommand(cmd.Cmd):
                 del obj_dict[key]
             except KeyError:
                 print("** no instance found **")
-            storage.save()
+            store_model.save()
 
 
     def do_all(self, argv):
@@ -149,9 +149,8 @@ class HBNBCommand(cmd.Cmd):
             Counts/retrieves the number of instances.
         '''
         obj_list = []
-        storage = FileStorage()
-        storage.reload()
-        objects = storage.all()
+        store_model.reload()
+        objects = store_model.all()
         try:
             if len(args) != 0:
                 eval(args)
