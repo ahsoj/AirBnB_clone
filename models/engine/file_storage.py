@@ -32,13 +32,15 @@ class FileStorage:
 
     def reload(self):
         """ reload file when it call for new """
+        import models
         try:
             with open(FileStorage.__file_path, encoding="utf-8") as fp:
                 FileStorage.__objects = json.load(fp)
             for k,v in FileStorage.__objects.items():
-                FileStorage.__objects[k] = v
-                #FileStorage.__objects[k] = cls_(**v)
-                #print(FileStorage.__objects)
+                cls_name = v["__class__"]
+                cls_name = models.classes[cls_name]
+                FileStorage.__objects[k] = cls_name(**v)
+
         except FileNotFoundError:
             return
 
