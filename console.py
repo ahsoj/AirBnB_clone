@@ -107,9 +107,36 @@ class HBNBCommand(cmd.Cmd):
             except:
                 print("** class doesn't exist **")
 
-    def do_update(self, arg):
-        """ update model """
-        print(arg)
+    def do_update(self, argv):
+        """ Usage: update <class name> <id> <attribute name> '<attribute value>' """
+        args = shlex.split(argv)
+        store_model.reload()
+        if len(args) == 0:
+            print("** class name missing **")
+        if len(args) == 1:
+            print("** instance id missing **")
+        if len(args) == 2:
+            print("** attribute name missing **")
+        if len(args) == 3:
+            print("** value missing **")
+        if len(args) > 3:
+            try:
+                eval(args[0])
+            except NameError:
+                print("** class doesn't exist **")
+            key = "{}.{}".format(args[0],args[1])
+            obj_dict = store_model.all()
+            try:
+                obj_value = obj_dict[key]
+            except KeyError:
+                print("** no instance found **")
+            try:
+                attr_type = type(getattr(obj_value,args[2]))
+                args[3] = attr_type(args[3])
+            except AttributeError:
+                pass
+            setattr(obj_value, args[2], args[3])
+            obj_value.save()
 
     def do_EOF(self, arg):
         """End of file"""

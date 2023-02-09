@@ -17,7 +17,7 @@ class BaseModel:
             if kwargs avail set attribute with setattr \
              methods else return current instance
         """
-        from inits import storage
+        from models import storage
         if kwargs:
             for k,v in kwargs.items():
                 if k != '__class__':
@@ -37,7 +37,7 @@ class BaseModel:
             updated_at with the current datetime
         """
 
-        from inits import storage
+        from models import storage
         self.updated_at = datetime.now()
         storage.save()
 
