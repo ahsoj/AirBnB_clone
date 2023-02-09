@@ -17,6 +17,12 @@ import cmd
 import shlex
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 console_model = BaseModel()
 store_model = FileStorage()
@@ -67,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 value = m_obj[key]
                 print(value)
             except KeyError:
-                print("no instance found")
+                print("** no instance found **")
 
     def do_destroy(self, argv):
         """ delete the specific model from the model """
@@ -138,6 +144,45 @@ class HBNBCommand(cmd.Cmd):
             setattr(obj_value, args[2], args[3])
             obj_value.save()
 
+    def do_count(self, args):
+        '''
+            Counts/retrieves the number of instances.
+        '''
+        obj_list = []
+        storage = FileStorage()
+        storage.reload()
+        objects = storage.all()
+        try:
+            if len(args) != 0:
+                eval(args)
+        except NameError:
+            print("** class doesn't exist **")
+            return
+        for key, val in objects.items():
+            if len(args) != 0:
+                if type(val) is eval(args):
+                    obj_list.append(val)
+            else:
+                obj_list.append(val)
+        print(len(obj_list))
+
+    def default(self, args):
+        '''
+            Catches all the function names that are not expicitly defined.
+        '''
+        functions = {"all": self.do_all, "update": self.do_update,
+                     "show": self.do_show, "count": self.do_count,
+                     "destroy": self.do_destroy, "update": self.do_update}
+        args = (args.replace("(", ".").replace(")", ".")
+                .replace('"', "").replace(",", "").split("."))
+
+        try:
+            cmd_arg = args[0] + " " + args[2]
+            func = functions[args[1]]
+            func(cmd_arg)
+        except:
+            print("*** Unknown syntax:", args[0])
+
     def do_EOF(self, arg):
         """End of file"""
         return True
@@ -151,20 +196,6 @@ class HBNBCommand(cmd.Cmd):
         print("Quit cmaand to exit the program")
         return False
 
-    def default(self, argv):
-        """ all the action of function list """
-        actions = {"all": self.do_all, "update": self.do_update,
-                     "show": self.do_show, "count": self.do_count,
-                     "destroy": self.do_destroy, "update": self.do_update}
-        argv = (args.replace("(", ".").replace(")", ".")
-                .replace('"', "").replace(",", "").split("."))
-
-        try:
-            cmd_arg = args[0] + " " + args[2]
-            func = functions[args[1]]
-            func(cmd_arg)
-        except:
-            print("*** Unknown syntax:", args[0])
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
