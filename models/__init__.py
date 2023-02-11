@@ -12,14 +12,14 @@ from models.amenity import Amenity
 from models.review import Review
 
 classes = {
-        "User": User,
-        "BaseModel": BaseModel,
-        "Place": Place,
-        "State": State,
-        "City": City,
-        "Amenity": Amenity,
-        "Review": Review
-        }
+    "User": User,
+    "BaseModel": BaseModel,
+    "Place": Place,
+    "State": State,
+    "City": City,
+    "Amenity": Amenity,
+    "Review": Review,
+}
 
 storage = FileStorage()
 storage.reload()

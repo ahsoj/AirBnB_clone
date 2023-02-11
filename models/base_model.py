@@ -9,7 +9,6 @@ from datetime import datetime
 
 
 class BaseModel:
-
     def __init__(self, *args, **kwargs):
         """
             *args:str/int
@@ -18,10 +17,11 @@ class BaseModel:
              methods else return current instance
         """
         from models import storage
+
         if kwargs:
-            for k,v in kwargs.items():
-                if k != '__class__':
-                    if k in ['created_at', 'updated_at']:
+            for k, v in kwargs.items():
+                if k != "__class__":
+                    if k in ["created_at", "updated_at"]:
                         setattr(self, k, datetime.fromisoformat(v))
                     else:
                         setattr(self, k, v)
@@ -38,6 +38,7 @@ class BaseModel:
         """
 
         from models import storage
+
         self.updated_at = datetime.now()
         storage.save()
 
@@ -49,7 +50,7 @@ class BaseModel:
 
         my_dict = self.__dict__.copy()
         my_dict["__class__"] = self.__class__.__name__
-        for key,value in self.__dict__.items():
+        for key, value in self.__dict__.items():
             if key in ["created_at", "updated_at"]:
                 value = self.__dict__[key].isoformat()
                 my_dict[key] = value
