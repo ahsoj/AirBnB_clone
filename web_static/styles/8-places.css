@@ -1,3 +1,29 @@
+.place_wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .places h1 {
+        font-size: 30px;
+        text-align: left;
+      }
+      article {
+        width: 390px;
+        text-align: start;
+        padding: 20px;
+        margin: 20px;
+        position: relative;
+        border: 1px solid #ff5a5f;
+        border-radius: 4px;
+      }
+      article h2 {
+        font-size: 30px;
+        margin: auto;
+        display: flex;
+        justify-content: center;
+    }
 .price_by_night {
         display: flex;
         justify-content: center;
@@ -13,7 +39,7 @@
         float: right;
         min-width: 60px;
         height: 60px;
-      }
+}
       .information {
         margin-top: 3.5em;
         margin-bottom: 20px;
