@@ -6,7 +6,7 @@ footer {
     position: fixed;
     bottom: 0;
 }
-footer_text {
+.footer_text {
     display: flex;
     justify-content: center;
 }
